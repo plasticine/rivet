@@ -1,0 +1,40 @@
+
+Rivet
+=====
+
+* rivet is a mini PHP framework intended to speed development.
+
+
+Features
+--------
+
+* regex based URLs using callback-style closures for views
+* [Twig](http://github.com/fabpot/Twig) templates. Django templates in PHP. Pimp.
+
+
+Requirements
+------------
+
+* PHP 5.3
+
+Example (index.php)
+-------
+
+    <?php
+		require_once('rivet/Rivet.php');
+		
+		// Homepage
+		$rivet->route('%^/$%', function($request){
+			echo 'Welcome to the rivet homepage!';
+		});
+		
+		// URL params matching & Template usage
+		$rivet->route('%^/work/([\w-]+)/([\d]+)/$%', function($request, $foo, $bar){
+			return new Template('some_template_file.html', array(
+				'foo' => $foo,
+				'bar' => $bar
+			));
+		});
+		
+		
+		echo $rivet->dispatch();
