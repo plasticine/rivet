@@ -1,10 +1,10 @@
 <?php
 	define('BASE_PATH', realpath('.'));
 	
-	include('Route.php');
-	include('Response.php');
-	include('Template.php');
-	include('Http.php');
+	require_once('Route.php');
+	require_once('Response.php');
+	require_once('Template.php');
+	require_once('Http.php');
 	
 	class Rivet	{
 		
@@ -25,9 +25,8 @@
 			foreach ($this::$routes as $route) {
 				if( $route->match($url) ){
 					$view = $route->run();
-					if( $view instanceof Response ){
+					if( $view instanceof Response )
 						return $view; // allow returning a response straight from the view
-					}
 					return new Response($view);
 				}
 			}
@@ -35,9 +34,24 @@
 		}
 		
 		public function route($url_pattern, Closure $view_callback, $name='')	{
-			$request &= $this->request;
-			$route = new Route($request, $name, $url_pattern, $view_callback);
+			$route = new Route(&$this, $name, $url_pattern, $view_callback);
 			array_push($this::$routes, $route); 
+		}
+		
+		public function getRoute($name) {
+			$namedRoutes = array();
+			foreach ($this::$routes as $route) {
+				if( $route->isNamed() ){
+					$namedRoutes[$route->name] = $route;
+				}
+			}
+			if($name){
+				if( array_key_exists((string)$name, $namedRoutes) ){
+					return $namedRoutes[$name];
+				}
+				throw new Exception("Named Route '$name' Does Not Exist");
+			}
+			return $namedRoutes;
 		}
 		
 	}

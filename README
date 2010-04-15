@@ -28,6 +28,11 @@ Example (index.php)
 			echo 'Welcome to the rivet homepage!';
 		});
 		
+		// Hello thar! :D
+		$rivet->route('%^/hello-world/$%', function($request){
+			echo 'Hello World';
+		});
+		
 		// URL params matching & Template usage
 		$rivet->route('%^/work/([\w-]+)/([\d]+)/$%', function($request, $foo, $bar){
 			return new Template('some_template_file.html', array(

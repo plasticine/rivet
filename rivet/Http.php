@@ -13,5 +13,6 @@
 	}
 
 	function error() {
-		# code...
+		$body = new Template('500.html');
+		return new Response($body, '500');
 	}

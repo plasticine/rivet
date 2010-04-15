@@ -8,3 +8,16 @@ bar = {{ bar }}<br>
 		<li>{{ letter }}</li>
 	{% endfor %}
 </ul>
+
+<hr>
+
+<ul>
+	<li><a href="{% url home %}">Home</a></li>
+	<li><a href="{% url hello %}">Hello!</a></li>
+	<li><a href="{% url work design 10 %}">View some design work!</a></li>
+	<li><a href="{% url redirect %}">Redirects!</a></li>
+	<li><a href="{% url 404 %}">404!</a></li>
+</ul>
+
+
+
