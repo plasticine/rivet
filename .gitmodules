@@ -1,3 +1,6 @@
 [submodule "rivet/Twig"]
 	path = rivet/Twig
 	url = git://github.com/fabpot/Twig.git
+[submodule "rivet/TwigExtensions/rivet-url"]
+	path = rivet/TwigExtensions/rivet-url
+	url = git://github.com/plasticine/twig-rivet-url.git
