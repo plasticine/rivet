@@ -10,7 +10,7 @@ Features
 --------
 
 * regex based URLs using callback-style closures for views
-* <a href="http://github.com/fabpot/Twig">Twitg</a> templates. Django templates in PHP. Pimp.
+* http://github.com/fabpot/Twig templates. Django templates in PHP. Pimp.
 
 
 Requirements
