@@ -23,19 +23,16 @@
 			
 			// URL params & Template usage!
 			new Route('^/work/([\w-]+)/([\d]+)/?$', 'work', function($foo, $bar){
-				$args = array(
+				return Template::render('param_test.html', array(
 					'foo' => $foo,
 					'bar' => $bar,
 					'test_variable' => array('a', 'b', 'c', 'd')
-				);
-				return Template::render('param_test.html', $args);
+				));
 			}),
 			
 			// Redirects
 			new Route('^/foo/?$', 'redirect-start', function(){
-				$test = redirect(reverse('redirect-end'));
-				echo $test;
-				return $test;
+				return redirect(reverse('redirect-end'));
 			}),
 			new Route('^/bar/?$', 'redirect-end', function(){
 				return Template::render('redirect_bar.html');

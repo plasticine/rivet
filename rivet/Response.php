@@ -1,7 +1,6 @@
 <?php
 
 	class Response {
-		
 		private static $status_codes = array(
 	        '200' => 'OK',
 	        '301' => 'Moved Permanently',

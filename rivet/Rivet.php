@@ -29,7 +29,8 @@
 		    			'models'	=>	BASE_PATH.'/models/',
 		    			'engine'	=>	'sqlite3',
 		    			'db_name'	=>	BASE_PATH.'/test.db'
-		    		)
+		    		),
+		    		'static_url'	=>	'/static'
 		    	);
 		    	Request::create();
 		    }

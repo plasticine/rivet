@@ -1,8 +1,7 @@
 <?php
 	
 	function notfound() {
-		$body = new Template('404.html');
-		return new Response($body, '404');
+		return new Response(Template::render('404.html'), '404');
 	}
 
 	function redirect($url) {

@@ -35,6 +35,7 @@
 		
 		public function getRoute($name) {
 			$namedRoutes = array();
+			echo "name: $name<br/>";
 			foreach ($this->routes as $route) {
 				if( $route->isNamed() ){
 					$namedRoutes[$route->name] = $route;
@@ -69,7 +70,7 @@
 		        }else if( is_string($params[0]) ){
 		            $routesToReverse = array($this->getRoute($params[0]));
 		        }
-		    }else if( count($params) == 2 AND is_string($params[0]) AND is_array($params[1]) ){
+		    }else if( count($params) == 2 AND (is_string($params[0]) OR is_numeric($params[0])) AND is_array($params[1]) ){
 		        $routeArgs = $params[1];
 		        $routesToReverse = array($this->getRoute($params[0]));
 		    }

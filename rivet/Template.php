@@ -30,6 +30,7 @@
 		    
 		    $template = self::$_instance->twig->loadTemplate($path);
 		    $args['request'] = Request::getInstance();
+		    $args['static_url'] = Rivet::getInstance()->config['static_url'];
 		    self::$_instance->body = $template->render($args);
 		    return self::$_instance->body;
 		}
