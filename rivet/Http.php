@@ -5,7 +5,10 @@
 	}
 
 	function redirect($url) {
-		$redirect = 'http://'.$_SERVER['HTTP_HOST'].$url;
+		$redirect = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$url;
+		if(substr($url, 0, 1) == '/')
+		    $redirect = 'http://'.$_SERVER['HTTP_HOST'].$url;
+		
 		return new Response('', '301', array(
 			'Location' => $redirect
 		));

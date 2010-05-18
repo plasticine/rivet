@@ -8,27 +8,27 @@
 </head>
 <body>
 	
-	<header>
-		<h1>rivet</h1>
+	<header class="group">
+		<h1>&bull; rivet</h1>
 		<nav>
 			<ul>
-				<li><a href="{% url home %}">Home</a></li>
-				<li><a href="{% url hello %}">Hello!</a></li>
-				<li><a href="{% url work design 10 %}">View some design work!</a></li>
-				<li><a href="{% url redirect-start %}">Redirects!</a></li>
+				<li><a href="{% url home %}" title="">Home</a></li>
+				<li><a href="{% url db-test %}" title="">Database</a></li>
+				<li><a href="{% url work design 10 %}" title="">View some design work!</a></li>
+				<li><a href="{% url redirect-start %}" title="">Redirects!</a></li>
 			</ul>
 		</nav>
 	</header>
-	<section>
+	<section class="group">
 		<header>
 			<h1>{% block content_title %}{% endblock %}</h1>
 		</header>
-		<aside>{% block aside %}{% endblock %}</aside>
 		<section>
 			{% block content %}{% endblock %}
 		</section>
+		<aside>{% block aside %}{% endblock %}</aside>
 	</section>
-	<footer>
+	<footer class="group">
 		footer
 	</footer>
 </body>

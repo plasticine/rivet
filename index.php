@@ -5,20 +5,27 @@
 		array(
 			// Homepage
 			new Route('^/$', 'home', function(){
-				$users = DB::getInstance('User');
-				$all_users = $users->order_by('age', 'DESC')->all();
-				$filtered_users = $users->where('first_name', 'Justin')->_or()->where('last_name', 'Jennings')->order_by('age')->exec();
-				
 				return Template::render('homepage.html', array(
-					'foo'	=> 'bar',
-					'filtered_users'	=>	$filtered_users,
-					'all_users'	=>	$all_users
+					'foo' => 'bar'
 				));
 			}),
 			
 			// Hello thar! :D
-			new Route('^/hello-world/?$', 'hello', function(){
-				return Template::render('hello-world.html', array('foo' => 'bar'));
+			new Route('^/database-test/?(page([\d]+))?/?$', 'db-test', function($page=0){
+			    if( ! $page )
+			        return redirect('page1/');
+			    
+			    $page = substr($page, 4);
+			    $per_page = 10;
+			    $num_users = DB::getInstance('User')->count();
+			    $num_pages = range(1, ceil($num_users / $per_page));
+			    
+			    $users = DB::getInstance('User')->limit(($page-1)*$per_page, $per_page)->all();
+				return Template::render('database.html', array(
+				    'users' => $users,
+				    'page' => $page,
+				    'num_pages' => $num_pages
+				));
 			}),
 			
 			// URL params & Template usage!
@@ -37,7 +44,6 @@
 			new Route('^/bar/?$', 'redirect-end', function(){
 				return Template::render('redirect_bar.html');
 			}),
-			
 			
 			// 404 Page!
 			new Route('^/404/?$', '404', function(){

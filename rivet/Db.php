@@ -68,6 +68,12 @@
         	return $this;
         }
         
+        public function count(){
+        	$this->query['select'] = 'count(*) as count';
+        	$result = $this->exec();
+        	return $result[0]->count;
+        }
+        
         public function _or(){
         	array_push($this->query['where'], 'OR'); 
         	return $this;
