@@ -7,4 +7,3 @@ TODO
 * DB stuff sucks - fix all of it. :)
 * error handling is shithouse - add support for proper exception handling, etc.
 * Allow over-riding of rivet $config settings by passing in an array from index.php
-* {{ url }} does not match numeric URL pattern names
