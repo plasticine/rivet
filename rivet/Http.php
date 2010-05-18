@@ -5,9 +5,9 @@
 		return new Response($body, '404');
 	}
 
-	function redirect($url='', $named_route='') {
+	function redirect($url) {
 		$redirect = 'http://'.$_SERVER['HTTP_HOST'].$url;
-		return new Response('body', '301', array(
+		return new Response('', '301', array(
 			'Location' => $redirect
 		));
 	}

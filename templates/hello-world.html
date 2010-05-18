@@ -1,16 +1,4 @@
-Hello there!
-<hr>
-foo = {{ foo }}<br>
-bar = {{ bar }}<br>
-
-<ul>
-	{% for letter in test_variable %}
-		<li>{{ letter }}</li>
-	{% endfor %}
-</ul>
-
-<hr>
-
+<h1>Hello!</h1>
 <ul>
 	<li><a href="{% url home %}">Home</a></li>
 	<li><a href="{% url hello %}">Hello!</a></li>
@@ -18,4 +6,3 @@ bar = {{ bar }}<br>
 	<li><a href="{% url redirect-start %}">Redirects!</a></li>
 	<li><a href="{% url 404 %}">404!</a></li>
 </ul>
-

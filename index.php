@@ -1,41 +1,52 @@
 <?php
 	require_once('rivet/Rivet.php');
 	
+	Routes::create(
+		array(
+			// Homepage
+			new Route('^/$', 'home', function(){
+				$users = DB::getInstance('User');
+				$all_users = $users->order_by('age', 'DESC')->all();
+				$filtered_users = $users->where('first_name', 'Justin')->_or()->where('last_name', 'Jennings')->order_by('age')->exec();
+				
+				return Template::render('homepage.html', array(
+					'foo'	=> 'bar',
+					'filtered_users'	=>	$filtered_users,
+					'all_users'	=>	$all_users
+				));
+			}),
+			
+			// Hello thar! :D
+			new Route('^/hello-world/?$', 'hello', function(){
+				return Template::render('hello-world.html', array('foo' => 'bar'));
+			}),
+			
+			// URL params & Template usage!
+			new Route('^/work/([\w-]+)/([\d]+)/?$', 'work', function($foo, $bar){
+				$args = array(
+					'foo' => $foo,
+					'bar' => $bar,
+					'test_variable' => array('a', 'b', 'c', 'd')
+				);
+				return Template::render('param_test.html', $args);
+			}),
+			
+			// Redirects
+			new Route('^/foo/?$', 'redirect-start', function(){
+				$test = redirect(reverse('redirect-end'));
+				echo $test;
+				return $test;
+			}),
+			new Route('^/bar/?$', 'redirect-end', function(){
+				return Template::render('redirect_bar.html');
+			}),
+			
+			
+			// 404 Page!
+			new Route('^/404/?$', '404', function(){
+				return notfound();
+			}),
+		)
+	);
 	
-	// Homepage
-	$rivet->route('^/$', function($r){
-		return new Template('homepage.html');
-	}, $name='home');
-	
-	// Hello thar! :D
-	$rivet->route('^/hello-world/?$', function($r){
-		echo 'Hello World<br><br>';
-	}, $name='hello');
-	
-	// URL params & Template usage!
-	$rivet->route('^/work/([\w-]+)/([\d]+)/?$', function($r, $foo, $bar){
-		return new Template('param_test.html', array(
-			'foo' => $foo,
-			'bar' => $bar,
-			'test_variable' => array('a', 'b', 'c', 'd')
-		));
-	}, $name='work');
-	
-	// Redirects
-	$rivet->route('^/foo/?$', function($r){
-		return redirect($r->getRoute('redirect-end')->reverse());
-	}, $name='redirect');
-	
-	$rivet->route('^/bar/?$', function($r){
-		return new Template('redirect_bar.html');
-	}, $name='redirect-end');
-	
-	// 404 Page!
-	$rivet->route('^/404/?$', function($r){
-		return notfound();
-	}, $name='404');
-	
-	
-	
-	//========================================================
-	echo $rivet->dispatch();
+	echo Rivet::dispatch();

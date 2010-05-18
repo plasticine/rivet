@@ -4,30 +4,39 @@
 	Twig_Autoloader::register();
 	
 	class Template {
-		
-		private $template = NULL;
-		private $path = NULL;
-		private $args = array();
+		protected static $_instance;
+		private function __construct(){}
+		private function __clone(){}
+		private $twig = NULL;
 		private $body = '';
 		
-		function __construct($path, array $args=array()) {
-			$loader = new Twig_Loader_Filesystem(BASE_PATH.'/templates');
-			$twig = new Twig_Environment($loader, array(
-				'debug' => TRUE, // TODO: set to settings value
-				'cache' => BASE_PATH.'/rivet/cache'
-			));
-			$twig->addExtension(new URL_Extension());
-			
-			$this->path = $path;
-			$this->args = $args;
-			$this->template	= $twig->loadTemplate($this->path);
-			$this->body = $this->template->render($this->args);
+		private static function init(){
+		    self::$_instance = new self();
+		    $loader = new Twig_Loader_Filesystem(BASE_PATH.'/templates');
+		    self::$_instance->twig = new Twig_Environment($loader, array(
+		    	'debug' => TRUE,
+		    	'cache' => BASE_PATH.'/rivet/cache'
+		    ));
+		    self::$_instance->twig->addExtension(new URL_Extension());
+		}
+		
+		public static function getInstance(){
+		    return self::$_instance;
+		}
+		
+		public static function render($path, array $args=array()){
+		    if( self::$_instance === NULL )
+		        self::init();
+		    
+		    $template = self::$_instance->twig->loadTemplate($path);
+		    $args['request'] = Request::getInstance();
+		    self::$_instance->body = $template->render($args);
+		    return self::$_instance->body;
 		}
 		
 		function __toString(){
 			return $this->body;
 		}
-		
 	}
 	
 	
@@ -38,7 +47,6 @@
 		public function getName() { 
 			return 'url';
 		}
-		
 		public function getTokenParsers() {
 			return array(new URL_TokenParser());
 		}
@@ -70,14 +78,11 @@
 	
 	class URL_Node extends Twig_Node {
 		protected $url;
-
+		
 		public function __construct($route_name, $params, $lineno) {
 			parent::__construct($lineno);
-			
-			global $rivet;
-			
-			$route = $rivet->getRoute($route_name);
-			$this->url = $route->reverse($params);
+			$routes = Routes::getInstance();
+			$this->url = $routes->reverse(array($route_name, $params));
 		}
 
 		public function compile($compiler) {
@@ -88,7 +93,6 @@
 			;
 		}
 	}
-	
 	
 	
 	

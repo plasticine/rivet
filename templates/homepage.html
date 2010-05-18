@@ -1,7 +1,22 @@
+<h1>Home</h1>
 <ul>
 	<li><a href="{% url home %}">Home</a></li>
 	<li><a href="{% url hello %}">Hello!</a></li>
 	<li><a href="{% url work design 10 %}">View some design work!</a></li>
-	<li><a href="{% url redirect %}">Redirects!</a></li>
+	<li><a href="{% url redirect-start %}">Redirects!</a></li>
 	<li><a href="{% url 404 %}">404!</a></li>
+</ul>
+
+<h2>all users:</h2>
+<ul>
+	{% for user in all_users %}
+		<li><a href="mailto:{{ user.email }}">{{ user }}</a>, age {{ user.age }}</li>
+	{% endfor %}
+</ul>
+
+<h2>filtered users:</h2>
+<ul>
+	{% for user in filtered_users %}
+		<li><a href="mailto:{{ user.email }}">{{ user }}</a>, age {{ user.age }}</li>
+	{% endfor %}
 </ul>
