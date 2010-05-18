@@ -35,7 +35,6 @@
 		
 		public function getRoute($name) {
 			$namedRoutes = array();
-			echo "name: $name<br/>";
 			foreach ($this->routes as $route) {
 				if( $route->isNamed() ){
 					$namedRoutes[$route->name] = $route;
