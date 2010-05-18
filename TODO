@@ -5,5 +5,7 @@ TODO
 * Handle POST requests properly
 * Add extra templating paths to the injected vars for Templates. eg: static media path, etc...
 * DB stuff sucks - fix all of it. :)
+* Models are 100% suck - need to be fixed.
 * error handling is shithouse - add support for proper exception handling, etc.
 * Allow over-riding of rivet $config settings by passing in an array from index.php
+* Better demo of the templating system.

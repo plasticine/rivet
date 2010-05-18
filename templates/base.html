@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>rivet &bull; {% block page_title %}{% endblock %}</title>
+	<link rel="stylesheet" href="{{ static_url }}/styles/rivet.css">
+	<link rel="stylesheet" href="{{ static_url }}/scripts/rivet.js">
+</head>
+<body>
+	
+	<header>
+		<h1>rivet</h1>
+		<nav>
+			<ul>
+				<li><a href="{% url home %}">Home</a></li>
+				<li><a href="{% url hello %}">Hello!</a></li>
+				<li><a href="{% url work design 10 %}">View some design work!</a></li>
+				<li><a href="{% url redirect-start %}">Redirects!</a></li>
+			</ul>
+		</nav>
+	</header>
+	<section>
+		<header>
+			<h1>{% block content_title %}{% endblock %}</h1>
+		</header>
+		<aside>{% block aside %}{% endblock %}</aside>
+		<section>
+			{% block content %}{% endblock %}
+		</section>
+	</section>
+	<footer>
+		footer
+	</footer>
+</body>
+</html>
