@@ -1,8 +1,12 @@
-<h1>Hello!</h1>
-<ul>
-	<li><a href="{% url home %}">Home</a></li>
-	<li><a href="{% url hello %}">Hello!</a></li>
-	<li><a href="{% url work design 10 %}">View some design work!</a></li>
-	<li><a href="{% url redirect-start %}">Redirects!</a></li>
-	<li><a href="{% url 404 %}">404!</a></li>
-</ul>
+{% extends "base.html" %}
+
+{% block page_title %}hello world!{% endblock %}
+{% block content_title %}Hello World!{% endblock %}
+
+{% block content %}
+    
+{% endblock  %}
+
+{% block aside %}
+	aside...
+{% endblock %}

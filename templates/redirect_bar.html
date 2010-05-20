@@ -1,3 +1,12 @@
+{% extends "base.html" %}
 
+{% block page_title %}redirect{% endblock %}
+{% block content_title %}You have been Redirected!{% endblock %}
 
-This is bar! You have been redirected from <a href="{% url redirect-start %}">foo</a>!<br>
+{% block content %}
+	This is &ldquo;bar&rdquo;! You have been redirected from &ldquo;<a href="{% url redirect-start %}">foo</a>&rdquo;!<br> 
+{% endblock  %}
+
+{% block aside %}
+	aside...
+{% endblock %}

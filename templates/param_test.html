@@ -1,21 +1,13 @@
-Hello there!
-<hr>
-foo = {{ foo }}<br>
-bar = {{ bar }}<br>
+{% extends "base.html" %}
 
-<ul>
-	{% for letter in test_variable %}
-		<li>{{ letter }}</li>
-	{% endfor %}
-</ul>
+{% block page_title %}param test{% endblock %}
+{% block content_title %}Parameter Test{% endblock %}
 
-<hr>
+{% block content %}
+    category = {{ category }}<br>
+    id = {{ id }}<br>
+{% endblock  %}
 
-<ul>
-	<li><a href="{% url home %}">Home</a></li>
-	<li><a href="{% url hello %}">Hello!</a></li>
-	<li><a href="{% url work design 10 %}">View some design work!</a></li>
-	<li><a href="{% url redirect-start %}">Redirects!</a></li>
-	<li><a href="{% url 404 %}">404!</a></li>
-</ul>
-
+{% block aside %}
+	aside...
+{% endblock %}
