@@ -99,7 +99,7 @@
 	                }
 	                if( ! $sub_match )
 	                    break;
-	                if( $sub_match AND $count+1 == count($sub_pattern) )
+	                if( $sub_match AND ($count+1 == count($sub_pattern)) AND ($count+1 == count($url_sub_patterns)) )
 	               		return $route;
 	                $count++;
 	            }
