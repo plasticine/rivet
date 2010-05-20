@@ -4,14 +4,18 @@
 	Routes::create(
 		array(
 			// Homepage
-			new Route('^/$', 'home', function(){
+			new Route('/', 'home', function(){
 				return Template::render('homepage.html', array(
 					'foo' => 'bar'
 				));
 			}),
 			
+			new Route('/reverse', 'reverse', function(){
+				return Template::render('reverse.html');
+			}),
+			
 			// Hello thar! :D
-			new Route('^/database-test/?(page([\d]+))?/?$', 'db-test', function($page=0){
+			new Route('/database-test/{?page}', 'db-test', function($page=0){
 			    if( ! $page )
 			        return redirect('page1/');
 			    
@@ -28,25 +32,28 @@
 				));
 			}),
 			
+			new Route('/hello-world', 'hello', function(){
+				return Template::render('hello-world.html');
+			}),
+			
 			// URL params & Template usage!
-			new Route('^/work/([\w-]+)/([\d]+)/?$', 'work', function($foo, $bar){
+			new Route('/work/{slug:category}/{?int:id}', 'work', function($category, $id){
 				return Template::render('param_test.html', array(
-					'foo' => $foo,
-					'bar' => $bar,
-					'test_variable' => array('a', 'b', 'c', 'd')
+					'category' => $category,
+					'id' => $id
 				));
 			}),
 			
 			// Redirects
-			new Route('^/foo/?$', 'redirect-start', function(){
+			new Route('/foo', 'redirect-start', function(){
 				return redirect(reverse('redirect-end'));
 			}),
-			new Route('^/bar/?$', 'redirect-end', function(){
+			new Route('/bar', 'redirect-end', function(){
 				return Template::render('redirect_bar.html');
 			}),
 			
 			// 404 Page!
-			new Route('^/404/?$', '404', function(){
+			new Route('/404', '404', function(){
 				return notfound();
 			}),
 		)

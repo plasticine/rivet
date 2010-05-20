@@ -21,16 +21,90 @@
 		
 		public function match()	{
 			$url = $_SERVER['REQUEST_URI'];
-			if( strpos($url, '?') )
-				$url = strstr($url, '?', TRUE);
 			
-			foreach ($this->routes as $route){
-				if ( preg_match($route->pattern, $url, $matches) ) {
-					$route->args = array_slice($matches, 1);
-					return $route;
-				}
-			}
-			return FALSE;
+	        if( strpos($url, '?') )
+	            $url = strstr($url, '?', TRUE);
+	        
+	        // trim start & end slashes from pattern
+	        if( substr($url, 0, 1) == '/' )
+	            $url = substr($url, 1);
+	        if( substr($url, -1) == '/' )
+	            $url = substr($url, 0, -1);
+	        $url_sub_patterns = explode('/', $url);
+	        
+	        foreach ($this->routes as $route) {
+	        	$matched_url = '/';
+	        	$count = 0;
+	        	$pattern = $route->pattern;
+	            // trim start & end slashes from pattern
+	            if( substr($pattern, 0, 1) == '/' )
+	                $pattern = substr($pattern, 1);
+	            if( substr($pattern, -1) == '/' )
+	                $pattern = substr($pattern, 0, -1);
+	            $sub_pattern = explode('/', $pattern);
+	            
+	            // Root page
+	            if( $pattern == '' AND $url_sub_patterns[0] == '' )
+	            	return $route;
+	            
+	            foreach ($sub_pattern as $sub) {
+	            	$sub_match = false;
+	                if( $url_sub_patterns[$count] == $sub ){
+	                    $matched_url .= $sub;
+	                    $sub_match = true;
+	                }else{
+	                    if( strstr($sub, '{') ){
+	                        if( preg_match("%^{(?P<optional>\?)?(?P<type>int|float|slug)?:?(?P<name>[\w]+)}$%", $sub, $matches) ){
+	                            $sub_match = false;
+	                            $optional = ($matches['optional']) ? true : false;
+	                            $type = ($matches['type']) ? $matches['type'] : false;
+	                            $name = $matches['name'];
+	
+	                            if( $type ){
+	                                switch ($type) {
+	                                    case 'int':
+	                                        if( preg_match("%^([\d]+)$%", $url_sub_patterns[$count]) ){
+	                                            $matched_url .= '/'.$url_sub_patterns[$count];
+	                                            $sub_match = true;
+	                                        }
+	                                        break;
+	                                    case 'float':
+	                                        if( preg_match("%^([\d\.]+)$%", $url_sub_patterns[$count]) ){
+	                                            $matched_url .= '/'.$url_sub_patterns[$count];
+	                                            $sub_match = true;
+	                                        } 
+	                                        break;
+	                                    case 'slug':
+	                                        if( preg_match("%^([\w-]+)$%", $url_sub_patterns[$count]) ){
+	                                            $matched_url .= '/'.$url_sub_patterns[$count];
+	                                            $sub_match = true;
+	                                        }
+	                                        break;
+	                                }
+	                            }else if( preg_match("%^([\w-]+)$%", $url_sub_patterns[$count]) ){
+	                                $matched_url .= '/'.$url_sub_patterns[$count];
+	                                $sub_match = true;
+	                            }
+	                            if( $sub_match )
+	                            	$route->args[] = $url_sub_patterns[$count];
+	                            
+	                            if( $optional === false AND !$sub_match )
+	                                break;
+	                            if( $optional AND !$sub_match ){
+	                                $sub_match = true;
+	                                $route->args[] = false;
+	                            }
+	                        }
+	                    }
+	                }
+	                if( ! $sub_match )
+	                    break;
+	                if( $sub_match AND $count+1 == count($sub_pattern) )
+	               		return $route;
+	                $count++;
+	            }
+	        }
+	        return FALSE;
 		}
 		
 		public function getRoute($name) {
@@ -76,27 +150,48 @@
             
             foreach ($routesToReverse as $route) {
                 $url = '/';
-                $pathSegments = explode('/', trim(substr($route->pattern, strpos($route->pattern, '/'), strrpos($route->pattern, '/')-1), '/'));
-                foreach ($pathSegments as $pattern) {
-                	if( $pattern != '' ){
-                	    // Capture and regexes in the URL pattern and
-                	    // attempt to match them to the $routeArgs
-                		if( preg_match("%^\((.*)\)$%", $pattern) ){
-                			$arg = array_shift($routeArgs);
-                			if( preg_match("%^$pattern$%", $arg) ){
-                				$segment = $arg.'/';
+                $param_iterator = 0;
+                $pattern = $route->pattern;
+                // trim start & end slashes from pattern
+                if( substr($pattern, 0, 1) == '/' )
+                    $pattern = substr($pattern, 1);
+                if( substr($pattern, -1) == '/' )
+                    $pattern = substr($pattern, 0, -1);
+                $sub_pattern = explode('/', $pattern);
+                
+                foreach ($sub_pattern as $sub) {
+                	if( $sub != '' ){
+                		if( preg_match("%^{(?P<optional>\?)?(?P<type>int|float|slug)?:?(?P<name>[\w]+)}$%", $sub, $matches) ){
+                		    $sub_match = false;
+                		    $current_param = $routeArgs[$param_iterator];
+                		    $optional = ($matches['optional']) ? true : false;
+                		    $type = ($matches['type']) ? $matches['type'] : false;
+                		    $name = $matches['name'];
+                		    
+                			if( $type ){
+                			    switch ($type) {
+                			        case 'int':
+                			            if( preg_match("%^([\d]+)$%", $current_param) )
+                			            	$url .= "$current_param/";
+                			            break;
+                			        case 'float':
+                			            if( preg_match("%^([\d\.]+)$%", $current_param) )
+                			            	$url .= "$current_param/";
+                			            break;
+                			        case 'slug':
+                			            if( preg_match("%^([\w-]+)$%", $current_param) )
+                			            	$url .= "$current_param/";
+                			            break;
+                			    }
                 			}
+                			$param_iterator++;
                 		}else{
-                			$segment = $pattern.'/';
+                			$url .= "$sub/";
                 		}
-                		$url .= $segment;
                 	}
                 }
-                if( substr($url, -1) != '/' ){
-                	$url.'/';
-                }
-            }
-            return $url;
+                return $url;
+			}
 		}
 	}
 	

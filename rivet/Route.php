@@ -33,8 +33,7 @@
     		//$pattern = $pattern.'()';
     		*/
     		
-    		$pattern = '%'.$pattern.'%';
-    		
+    		//$pattern = '%^'.$pattern.'$%';
     		return $pattern;
     	}
     	
