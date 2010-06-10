@@ -47,8 +47,11 @@
 	            if( $pattern == '' AND $url_sub_patterns[0] == '' )
 	            	return $route;
 	            
+	            // echo $route."<br />";
+	            
 	            foreach ($sub_pattern as $sub) {
 	            	$sub_match = false;
+	            	$optional = false;
 	                if( $url_sub_patterns[$count] == $sub ){
 	                    $matched_url .= $sub;
 	                    $sub_match = true;
@@ -59,47 +62,56 @@
 	                            $optional = ($matches['optional']) ? true : false;
 	                            $type = ($matches['type']) ? $matches['type'] : false;
 	                            $name = $matches['name'];
-	
+								$url_sub = $url_sub_patterns[$count];
+								
+								/*
+								echo "pattern: $sub<br />";
+								echo "data: $url_sub<br />";
+								echo "type: $type<br />";
+								echo "optional: $optional<br />";
+								*/
+								
 	                            if( $type ){
 	                                switch ($type) {
 	                                    case 'int':
-	                                        if( preg_match("%^([\d]+)$%", $url_sub_patterns[$count]) ){
-	                                            $matched_url .= '/'.$url_sub_patterns[$count];
+	                                        if( preg_match("%^([\d]+)$%", $url_sub) ){
+	                                            $matched_url .= '/'.$url_sub;
 	                                            $sub_match = true;
 	                                        }
 	                                        break;
 	                                    case 'float':
-	                                        if( preg_match("%^([\d\.]+)$%", $url_sub_patterns[$count]) ){
-	                                            $matched_url .= '/'.$url_sub_patterns[$count];
+	                                        if( preg_match("%^([\d\.]+)$%", $url_sub) ){
+	                                            $matched_url .= '/'.$url_sub;
 	                                            $sub_match = true;
 	                                        } 
 	                                        break;
 	                                    case 'slug':
-	                                        if( preg_match("%^([\w-]+)$%", $url_sub_patterns[$count]) ){
-	                                            $matched_url .= '/'.$url_sub_patterns[$count];
+	                                        if( preg_match("%^([a-zA-Z0-9-]+)$%", $url_sub) ){
+	                                            $matched_url .= '/'.$url_sub;
 	                                            $sub_match = true;
 	                                        }
 	                                        break;
 	                                }
-	                            }else if( preg_match("%^([\w-]+)$%", $url_sub_patterns[$count]) ){
-	                                $matched_url .= '/'.$url_sub_patterns[$count];
+	                            }else if( preg_match("%^([\w-]+)$%", $url_sub) ){
+	                                $matched_url .= '/'.$url_sub;
 	                                $sub_match = true;
 	                            }
+	                            
+	                            // echo "sub_match: ".$sub_match."<br />";
+	                            
+	                            // if this secment is optional and a param WAS NOT passed to match this segment...
+	                            if( $optional AND ! $url_sub )
+	                            	return $route;
+	                            
 	                            if( $sub_match )
 	                            	$route->args[] = $url_sub_patterns[$count];
-	                            
-	                            if( $optional === false AND !$sub_match )
-	                                break;
-	                            if( $optional AND !$sub_match ){
-	                                $sub_match = true;
-	                                $route->args[] = false;
-	                            }
 	                        }
 	                    }
 	                }
-	                if( ! $sub_match )
-	                    break;
-	                if( $sub_match AND ($count+1 == count($sub_pattern)) AND ($count+1 == count($url_sub_patterns)) )
+	                // echo '<hr/>';
+	                
+	                // todo: this is broken - it allows extra params after the last match...
+	                if( $sub_match AND ($count+1 == count($sub_pattern)) AND (($count+1 == count($url_sub_patterns)) OR $optional ) )
 	               		return $route;
 	                $count++;
 	            }

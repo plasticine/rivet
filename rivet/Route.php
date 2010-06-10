@@ -38,6 +38,7 @@
     	}
     	
     	public function run() {
+    		array_unshift($this->args, Request::getInstance());
     		ob_start();
     		return call_user_func_array($this->callback, $this->args);
     		ob_end_flush();
