@@ -69,6 +69,7 @@
         }
         
         public function count(){
+        	// this is 100% filth...
         	$this->query['select'] = 'count(*) as count';
         	$result = $this->exec();
         	return $result[0]->count;
@@ -99,11 +100,11 @@
         }
         
         public function save(object $object){
-        	
+        	// todo...
         }
         
         public function validate(){
-        	
+        	// todo...
         }
         
         public function all(){
@@ -111,6 +112,7 @@
         }
         
         public function exec(){
+        	// this is pretty crap really...
         	$query = "SELECT " . $this->query['select'] . " FROM " . $this->query['from'];
         	
         	// Where
