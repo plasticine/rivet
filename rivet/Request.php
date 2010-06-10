@@ -19,6 +19,10 @@
 			return self::$_instance;
 		}
 		
+		public function __invoke($key){
+			return $this->offsetGet($key);
+		}
+		
 		public function __toString() {
 			return '<pre>'.print_r($this->request).'</pre>';
 		}
@@ -29,10 +33,14 @@
 			$httpRequest['path'] = $_SERVER['REQUEST_URI'];
 			$httpRequest['method'] = strtolower($_SERVER['REQUEST_METHOD']);
 			$httpRequest['encoding'] = $_SERVER['REQUEST_METHOD'];
-			$httpRequest['GET'] = $_GET;
-			$httpRequest['POST'] = $_POST;
-			$httpRequest['COOKIES'] = $_COOKIES;
-			$httpRequest['SERVER'] = $_SERVER;
+			$httpRequest['get'] = $_GET;
+			$httpRequest['post'] = $_POST;
+			$httpRequest['files'] = $_FILES;
+			$httpRequest['cookies'] = $_COOKIES;
+			$httpRequest['server'] = $_SERVER;
+			
+			if( count($_FILES) )
+			    $httpRequest['post'] = array_merge($httpRequest['post'], $httpRequest['files']);
 			
 			return $httpRequest;
 		}
