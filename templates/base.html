@@ -4,7 +4,8 @@
 	<meta charset="UTF-8">
 	<title>rivet &bull; {% block page_title %}{% endblock %}</title>
 	<link rel="stylesheet" href="{{ static_url }}/styles/rivet.css">
-	<link rel="stylesheet" href="{{ static_url }}/scripts/rivet.js">
+	<link rel="stylesheet" href="{{ static_url }}/styles/tm_twilight.css">
+	<script type="text/javascript" src="{{ static_url }}/scripts/rivet.js"></script>
 </head>
 <body>
 	
@@ -13,10 +14,9 @@
 		<nav>
 			<ul>
 				<li><a href="{% url home %}" title="">Home</a></li>
-				<li><a href="{% url db-test %}" title="">Database</a></li>
-				<li><a href="{% url work design 10 %}" title="">URL Params</a></li>
-				<li><a href="{% url reverse %}" title="">URL Reversing</a></li>
-				<li><a href="{% url redirect-start %}" title="">Redirects!</a></li>
+				<li><a href="{% url about %}" title="">About</a></li>
+				<li><a href="{% url journal %}" title="">Journal</a></li>
+				<li><a href="{% url contact %}" title="">Contact</a></li>
 			</ul>
 		</nav>
 	</header>
@@ -24,10 +24,12 @@
 		<header>
 			<h1>{% block content_title %}{% endblock %}</h1>
 		</header>
-		<section>
-			{% block content %}{% endblock %}
-		</section>
-		<aside>{% block aside %}{% endblock %}</aside>
+		{% block main %}
+			<section>
+				{% block content %}{% endblock %}
+			</section>
+			<aside>{% block aside %}{% endblock %}</aside>
+		{% endblock  %}
 	</section>
 	<footer class="group">
 		footer
