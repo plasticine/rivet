@@ -18,3 +18,7 @@
 		$body = new Template('500.html');
 		return new Response($body, '500');
 	}
+	
+	function is_ajax(){
+		return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+	}
