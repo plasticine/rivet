@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block page_title %}contact{% endblock %}
+{% block content_title %}Drop me a Line!{% endblock %}
+
+{% block content %}
+    <form action="{% url contact %}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+    	{% for field in form.fields %}
+    		<p>
+    			{{ field }}
+    			{% if not field.valid %}
+    			    <ul class="errors">
+    			    {% for error in field.errors %}
+    			        <li>{{ error }}</li>
+    			    {% endfor %}
+    			    </ul>
+    			{% endif %}
+    		</p>
+    	{% endfor %}
+    	<p><input type="submit" value="send &rarr;"></p>
+    </form>
+    
+    <hr />
+    
+{% endblock  %}
+
+{% block aside %}
+	...
+{% endblock %}

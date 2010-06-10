@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block page_title %}journal{% endblock %}
+{% block content_title %}Journal{% endblock %}
+
+{% block content %}
+    <ol>
+    	{% for article in articles %}
+    		<li>
+    			<article>
+    				<header>
+    					<h1><a href="{% url article [article.slug] %}">{{ article }}</a></h1>
+    					<details>
+    						published {{ article.date }}
+    					</details>
+    				</header>
+    				{{ article.body|safe }}
+    			</article>
+    		</li>
+    	{% endfor %}
+    </ol>
+{% endblock  %}
+
+{% block aside %}
+	...
+{% endblock %}
