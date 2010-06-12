@@ -4,6 +4,8 @@
 	Twig_Autoloader::register();
 	
 	// todo: Fix this... eww...
+	require_once('TwigExtensions/default/Extension/Text.php');
+	require_once('TwigExtensions/typography/typography.php');
 	require_once('TwigExtensions/rivet-url/twig-url.php');
 	
 	class Template {
@@ -21,6 +23,8 @@
 		    	'cache' => BASE_PATH.'/rivet/cache'
 		    ));
 		    self::$_instance->twig->addExtension(new URL_Extension());
+		    self::$_instance->twig->addExtension(new Twig_Extension_Text());
+		    self::$_instance->twig->addExtension(new Twig_Extension_Typography());
 		    self::$_instance->twig->addExtension(new Twig_Extension_Escaper(true));
 		}
 		

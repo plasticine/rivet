@@ -58,18 +58,14 @@
     	public function offsetUnset($offset) {}
     	public function offsetGet($offset) {
     	    $field = $this->fields[$offset];
-    	    echo '<pre>';
-    	    print_r($field);
-    	    print_r($field->value());
-    	    echo '</pre>';
     	    return $field->value();
     	}
     }
     
     class Field {
-    	private $value = '';
-    	private $cleaned = false;
-    	private $cleanvalue = NULL;
+    	protected $value = '';
+    	protected $cleaned = false;
+    	protected static $cleanvalue = NULL;
     	public $valid;
     	public $errors;
     	
@@ -97,7 +93,6 @@
     	public function value(){
     		if( ! $this->cleaned )
     			$this->clean();
-    		echo 'cleaned: '.$this->cleanvalue;
     		return $this->cleanvalue;
     	}
     	
@@ -125,7 +120,7 @@
     	}
     	
     	public function clean(){
-    		$this->cleanvalue = filter_var($this->value, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_HIGH);
+    		$this->cleanvalue = new SafeString($this->getValue());
     		$this->cleaned = true;
     	}
     	
@@ -145,14 +140,14 @@
             return sprintf($this->renderString,
                 $this->name,
                 $this->id,
-                $this->getValue(),
+                stripslashes($this->getValue()),
                 $this->getAttrs(),
                 (Rivet::getInstance()->config['xhtml_tags']) ? '/' : ''
             );
         }
         
         public function clean(){
-        	$this->cleanvalue = filter_var($this->getValue(), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_HIGH);
+        	$this->cleanvalue = new SafeString($this->getValue());
         	$this->cleaned = true;
         }
     }
@@ -166,7 +161,7 @@
                 $this->name,
                 $this->id,
                 $this->getAttrs(),
-                $this->getValue()
+                stripslashes($this->getValue())
             );
         }
     }
@@ -216,7 +211,7 @@
         }
         
         public function clean(){
-        	$this->cleanvalue = filter_var($this->getValue(), FILTER_SANITIZE_URL);
+            $this->cleanvalue = new SafeString(filter_var($this->getValue(), FILTER_SANITIZE_URL));
         	$this->cleaned = true;
         }
     }
@@ -239,7 +234,7 @@
             return sprintf($this->renderString,
                 $this->name,
                 $this->id,
-                $this->getValue(),
+                stripslashes($this->getValue()),
                 $this->getAttrs(),
                 (Rivet::getInstance()->config['xhtml_tags']) ? '/' : ''
             );
@@ -266,7 +261,7 @@
         }
         
         public function clean(){
-        	$this->cleanvalue = filter_var($this->getValue(), FILTER_SANITIZE_NUMBER_INT);
+        	$this->cleanvalue = new SafeString(filter_var($this->getValue(), FILTER_SANITIZE_NUMBER_INT));
         	$this->cleaned = true;
         }
     }
@@ -289,7 +284,7 @@
             return sprintf($this->renderString,
                 $this->name,
                 $this->id,
-                $this->getValue(),
+                stripslashes($this->getValue()),
                 $this->getAttrs(),
                 (Rivet::getInstance()->config['xhtml_tags']) ? '/' : ''
             );
@@ -316,7 +311,7 @@
         }
         
         public function clean(){
-        	$this->cleanvalue = filter_var($this->getValue(), FILTER_SANITIZE_URL);
+            $this->cleanvalue = new SafeString(filter_var($this->getValue(), FILTER_SANITIZE_NUMBER_FLOAT));
         	$this->cleaned = true;
         }
     }
@@ -412,7 +407,7 @@
         }
         
         public function clean(){
-        	$this->cleanvalue = filter_var($this->getValue(), FILTER_SANITIZE_URL);
+            $this->cleanvalue = new SafeString(filter_var($this->getValue(), FILTER_SANITIZE_URL));
         	$this->cleaned = true;
         }
     }
@@ -427,7 +422,7 @@
             return sprintf($this->renderString,
                 $this->name,
                 $this->id,
-                $this->getValue(),
+                stripslashes($this->getValue()),
                 $this->getAttrs(),
                 (Rivet::getInstance()->config['xhtml_tags']) ? '/' : ''
             );
@@ -446,7 +441,7 @@
         }
         
         public function clean(){
-        	$this->cleanvalue = filter_var($this->getValue(), FILTER_SANITIZE_EMAIL);
+            $this->cleanvalue = new SafeString(filter_var($this->getValue(), FILTER_SANITIZE_EMAIL));
         	$this->cleaned = true;
         }
     }

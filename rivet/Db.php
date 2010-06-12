@@ -12,7 +12,7 @@
         private $model_name = NULL;
         private $query = array();
         
-        public static function getInstance($model_name){
+        public static function model($model_name, $parameters = array()){
         	if( self::$_instance === NULL ) {
         		self::$_instance = new self();
         		self::$_instance->model = $model;
@@ -23,7 +23,7 @@
         		self::$_instance->db = new SQLite3($config['database']['db_name']);
         		self::$_instance->modelPath = $config['database']['models'];
         		self::$_instance->model_name = $model_name;
-        		self::$_instance->model = self::$_instance->newModelObject($model_name);
+        		self::$_instance->model = self::$_instance->newModelObject($model_name, $parameters);
         		
         		self::$_instance->query['from'] = strtolower(get_class(self::$_instance->model));
         		self::$_instance->query['select'] = '*';
@@ -33,7 +33,7 @@
         	return self::$_instance;
         }
         
-        public function newModelObject($name, $parameters = array()) {
+        public function newModelObject($name, $parameters) {
             if ( ! class_exists($name) && ! $this->loadModel($name) )
             	die('Library File "'.$this->modelPath.'/'.$name.'.php" not found.');
             return new $name($this, $parameters);
@@ -99,8 +99,33 @@
         	return $this;
         }
         
-        public function save(object $object){
-        	// todo...
+        public function save(){
+        	$fields = array_combine(
+        	    $this->model->fields(),
+        	    array_map(
+        	        function($x){
+        	            if( mb_detect_encoding($x) != 'UTF-8' )
+        	                return utf8_encode($x);
+        	            return $x;
+        	        },
+        	        $this->model->data()
+        	    )
+        	);
+        	
+        	$sql = sprintf(
+        	    'INSERT INTO %s (%s) VALUES ("%s")',
+        	    $this->model_name,
+        	    implode(', ', array_map('SQLite3::escapeString', array_keys($fields))),
+        	    implode('", "', array_map('SQLite3::escapeString', $fields))
+        	);
+        	
+        	if( @$this->db->query($sql) !== false )
+        	    return $this->db->lastInsertRowID();
+        	
+        	
+        	// TODO: Yuk.
+        	echo $this->db->lastErrorMsg().'<br />';
+        	die('something went wrong');
         }
         
         public function validate(){
@@ -109,6 +134,10 @@
         
         public function all(){
         	return $this->exec();
+        }
+        
+        private function sanitize($value){
+            
         }
         
         public function exec(){

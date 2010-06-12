@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block page_title %}contacts{% endblock %}
+{% block content_title %}Contacts{% endblock %}
+
+{% block content %}
+    
+    <table style="width: 100%;">
+        <thead>
+            <tr style="text-align: left; font-weight: bold;">
+                <th>Name</th>
+                <th>Email</th>
+                <th>URL</th>
+                <th>Date Added</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+                <tr>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>{{ contact.address }}</td>
+                    <td>{{ contact.date|date("m/d/Y") }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+{% endblock  %}
+
+{% block aside %}
+	
+	<form action="{% url contacts %}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+		{% for field in form.fields %}
+			<p>
+				{{ field }}
+				{% if not field.valid %}
+				    <ul class="errors">
+				    {% for error in field.errors %}
+				        <li>{{ error }}</li>
+				    {% endfor %}
+				    </ul>
+				{% endif %}
+			</p>
+		{% endfor %}
+		<p><input type="submit" value="send &rarr;"></p>
+	</form>
+	
+{% endblock %}

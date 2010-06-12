@@ -9,7 +9,7 @@
 		public function __construct($db, $field_values=array()){
 			if( count($field_values) ){
 				foreach ($field_values as $key => $value){
-					$this->$key = $value;
+					$this->$key = new SafeString($value);
 				}
 			}
 		}
@@ -18,15 +18,23 @@
 			return (string)$this->id;
 		}
 		
+		public function order_by(){
+			return $this->id;
+		}
+		
 	    public function fields() {
 	    	$fields = array();
-	        foreach($this as $field => $value) {
-	        	array_push($fields, $field);
-            }
+	        foreach($this as $field => $value)
+	            if( $field != 'id' )
+	        	    array_push($fields, $field);
             return $fields;
 	    }
 	    
-	    private function save(){
-	    	
+	    public function data(){
+	        $data = array();        
+	        foreach(get_object_vars($this) as $name => $field)
+	            if( $name != 'id' )
+	        	    array_push($data, $field);
+	        return $data;
 	    }
 	}

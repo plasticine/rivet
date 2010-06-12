@@ -4,6 +4,9 @@
 {% block content_title %}Drop me a Line!{% endblock %}
 
 {% block content %}
+    
+    {{ test|typography }}
+    
     <form action="{% url contact %}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
     	{% for field in form.fields %}
     		<p>
