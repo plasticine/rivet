@@ -4,3 +4,9 @@
 [submodule "rivet/TwigExtensions/rivet-url"]
 	path = rivet/TwigExtensions/rivet-url
 	url = git://github.com/plasticine/twig-rivet-url.git
+[submodule "rivet/TwigExtensions/default"]
+	path = rivet/TwigExtensions/default
+	url = git://github.com/fabpot/Twig-extensions.git
+[submodule "rivet/TwigExtensions/typography"]
+	path = rivet/TwigExtensions/typography
+	url = git@github.com:plasticine/twig-php-typography.git
